@@ -1,25 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{createContext,useReducer} from 'react';
 import './App.css';
+import {Header} from './components/header'
+import {Balance} from './components/balance'
+import {Incomexpense} from './components/income-expense'
+import {Tl} from'./components/transactionlist'
+import {Addlist} from './components/addlist'
+import {Reducer} from './components/reducer'
+const inititalstate={
+Transactions: []
+}
+ export const globalContext=createContext(inititalstate);
 
 function App() {
+
+   const [state,dispatch]= useReducer(Reducer,inititalstate)
+   function deleteTransaction(id){
+    dispatch({
+      type:'deleteTrans',
+      payload: id
+    });
+   }
+    function addTransaction(transaction){
+    dispatch({
+      type:'AddTrans',
+      payload: transaction
+    });
+   }
+   
   return (
+  	<globalContext.Provider value={{transactions: state.Transactions,deleteTransaction,addTransaction}}>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header/>
+      <Balance/>
+      <Incomexpense/>
+      <Tl/>
+      <Addlist/>
     </div>
+    </globalContext.Provider>
   );
 }
 
